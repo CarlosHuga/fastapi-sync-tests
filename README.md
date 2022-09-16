@@ -4,18 +4,18 @@
 
 * In my company we use flask with postgres to build ours microservices.
 * We were studying start to use FastAPI.
-* Then, in a beautiful day, I made some load tests in my FastAPI POC 
+* Then, in a beautiful day, I made some load tests in my FastAPI POC
   project and, I figure out that my system has broken.
 * So I found this issue at FastAPI GitHub: https://github.com/tiangolo/full-stack-fastapi-postgresql/issues/104#issuecomment-809418091
 * After that I decided to try the new version of SQLAlchemy Async, and I have good news.
 The SQLAlchemy Async way works like a charm.
-  
+
 
 ### Technologies involved to execute this benchmark:
 
 * [FastAPI](https://fastapi.tiangolo.com/)
 * [PostgreSQL](https://www.postgresql.org/)
-* [SQLAlchemy](https://www.sqlalchemy.org/)  
+* [SQLAlchemy](https://www.sqlalchemy.org/)
 * [Docker](https://www.docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Uvicorn](https://www.uvicorn.org/)
@@ -33,31 +33,23 @@ The SQLAlchemy Async way works like a charm.
 docker-compose up
 ```
 
-
-### How to test with wrk locally?
-
-```sh
-# Sync way
-wrk -t12 -c12 -d10s http://localhost:8001/users
-```
-
-```sh
-# Async way
-wrk -t12 -c12 -d10s http://localhost:8000/users
-```
-
 ### How to test with wrk in docker?
 
 * You will need to know you docker ip, in my case is: <b>172.17.0.1</b>
 
 ```sh
+# list all ips for docker instances
+docker ps -q | xargs -n 1 docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{ .Name }}' | sed 's/ \// /'
+```
+
+```sh
 # Sync way
-docker run --rm  skandyla/wrk -t12 -c12 -d10s http://172.17.0.1:8001/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c12 -d10s http://192.168.64.4:8000/users
 ```
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t12 -c12 -d10s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c12 -d10s http://192.168.64.3:8000/users
 ```
 
 
@@ -68,7 +60,7 @@ docker run --rm  skandyla/wrk -t12 -c12 -d10s http://172.17.0.1:8000/users
 
 ```sh
 # Sync way
-docker run --rm  skandyla/wrk -t1 -c1 -d10s http://172.17.0.1:8001/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t1 -c1 -d10s http://192.168.64.4:8000/users
 ```
 
 ```sh
@@ -85,7 +77,7 @@ Transfer/sec:      8.69KB
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t1 -c1 -d10s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t1 -c1 -d10s http://192.168.64.3:8000/users
 ```
 
 ```sh
@@ -106,7 +98,7 @@ Transfer/sec:     10.31KB
 
 ```sh
 # Sync way
-docker run --rm  skandyla/wrk -t12 -c12 -d10s http://172.17.0.1:8001/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c12 -d10s http://192.168.64.4:8000/users
 ```
 
 ```sh
@@ -123,7 +115,7 @@ Transfer/sec:     70.91KB
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t12 -c12 -d10s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c12 -d10s http://192.168.64.3:8000/users
 ```
 
 ```sh
@@ -144,7 +136,7 @@ Transfer/sec:     83.78KB
 
 ```sh
 # Sync way
-docker run --rm  skandyla/wrk -t12 -c24 -d10s http://172.17.0.1:8001/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c24 -d10s http://192.168.64.4:8000/users
 ```
 
 ```sh
@@ -161,7 +153,7 @@ Transfer/sec:     76.55KB
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t12 -c24 -d10s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c24 -d10s http://192.168.64.3:8000/users
 ```
 
 ```sh
@@ -182,7 +174,7 @@ Transfer/sec:     86.71KB
 
 ```sh
 # Sync way
-docker run --rm  skandyla/wrk -t12 -c48 -d10s http://172.17.0.1:8001/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c48 -d10s http://192.168.64.4:8000/users
 ```
 
 ```sh
@@ -199,7 +191,7 @@ Transfer/sec:       0.00B
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t12 -c48 -d10s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c48 -d10s http://192.168.64.3:8000/users
 ```
 
 ```sh
@@ -296,7 +288,7 @@ web-async_1           | sqlalchemy.exc.TimeoutError: QueuePool limit of size 5 o
 
 ```sh
 # Async way
-docker run --rm  skandyla/wrk -t12 -c200 -d300s http://172.17.0.1:8000/users
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c200 -d300s http://192.168.64.3:8000/users
 ```
 ```sh
 # Result:
@@ -312,7 +304,7 @@ Transfer/sec:     96.36KB
 
 ```sh
 # Async way inserting data into database
-docker run --rm  skandyla/wrk -t12 -c200 -d30s http://172.17.0.1:8000/users/insert-data-to-test
+docker run --network=fastapiandsqlalchemysyncvsasync_default --rm  skandyla/wrk -t12 -c200 -d30s http://192.168.64.3:8000/users/insert-data-to-test
 ```
 
 ```sh
@@ -330,8 +322,8 @@ Transfer/sec:     73.46KB
 
 ### Conclusion:
 
-* Looking at the tests results we can see that SQLAlchemy Async Way is better than with SQLAlchemy Sync Way. 
+* Looking at the tests results we can see that SQLAlchemy Async Way is better than with SQLAlchemy Sync Way.
   To use Async Way you will need the new version of SQLAlchemy >= 1.4.
-  
+
 
 That's all. Thanks for reading.
