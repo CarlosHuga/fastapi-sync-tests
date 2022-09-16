@@ -1,0 +1,6 @@
+fastapi==0.83.0
+sqlalchemy==1.4.7
+psycopg2-binary==2.8.6
+uvicorn==0.18.3
+asyncpg==0.22.0
+black
